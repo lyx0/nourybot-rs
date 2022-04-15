@@ -6,6 +6,7 @@ extern crate dotenv_codegen;
 use dotenv::dotenv;
 
 use twitch_irc::login::StaticLoginCredentials;
+use twitch_irc::message::ServerMessage;
 use twitch_irc::TwitchIRCClient;
 use twitch_irc::{ClientConfig, SecureTCPTransport};
 
@@ -25,14 +26,26 @@ pub async fn main() {
 
     let join_handle = tokio::spawn(async move {
         while let Some(message) = incoming_messages.recv().await {
-            println!("Received message: {:?}", message);
+            match message {
+                ServerMessage::Privmsg(msg) => {
+                    println!(
+                        "(#{}) {}: {}",
+                        msg.channel_login, msg.sender.name, msg.message_text
+                    );
+                }
+                ServerMessage::Whisper(msg) => {
+                    println!("(w) {}: {}", msg.sender.name, msg.message_text);
+                }
+                _ => {}
+            }
         }
     });
 
     client.join("pajlada".to_owned()).unwrap();
+    client.join("nourylul".to_owned()).unwrap();
 
     client
-        .say("pajlada".to_owned(), "test xd".to_owned())
+        .say("nourylul".to_owned(), "test xd".to_owned())
         .await
         .unwrap();
 

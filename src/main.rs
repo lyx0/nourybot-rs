@@ -31,6 +31,8 @@ pub async fn main() {
 
     client.join("pajlada".to_owned()).unwrap();
     client.join("nourylul".to_owned()).unwrap();
+    client.say("nourylul".to_owned(), "RaccAttack TeaTime".to_owned()).await.unwrap();
+    client.say("nourybot".to_owned(), "RaccAttack".to_owned()).await.unwrap();
 
     let join_handle = tokio::spawn(async move {
         while let Some(message) = incoming_messages.recv().await {
@@ -43,7 +45,7 @@ pub async fn main() {
                         && msg.is_action
                     {
                         client
-                            .say("nourylul".to_owned(), "xd".to_owned())
+                            .say("pajlada".to_owned(), "gopherGermany OBACHT".to_owned())
                             .await
                             .unwrap();
                     };

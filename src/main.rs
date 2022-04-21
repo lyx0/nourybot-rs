@@ -10,7 +10,6 @@ use twitch_irc::message::ServerMessage;
 use twitch_irc::TwitchIRCClient;
 use twitch_irc::{ClientConfig, SecureTCPTransport};
 
-
 #[tokio::main]
 pub async fn main() {
     dotenv().ok();
@@ -31,8 +30,14 @@ pub async fn main() {
 
     client.join("pajlada".to_owned()).unwrap();
     client.join("nourylul".to_owned()).unwrap();
-    client.say("nourylul".to_owned(), "RaccAttack TeaTime".to_owned()).await.unwrap();
-    client.say("nourybot".to_owned(), "RaccAttack".to_owned()).await.unwrap();
+    client
+        .say("nourylul".to_owned(), "RaccAttack TeaTime".to_owned())
+        .await
+        .unwrap();
+    client
+        .say("nourybot".to_owned(), "RaccAttack".to_owned())
+        .await
+        .unwrap();
 
     let join_handle = tokio::spawn(async move {
         while let Some(message) = incoming_messages.recv().await {
@@ -57,7 +62,6 @@ pub async fn main() {
             }
         }
     });
-
 
     join_handle.await.unwrap();
 

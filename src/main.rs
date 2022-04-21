@@ -10,7 +10,6 @@ use twitch_irc::message::ServerMessage;
 use twitch_irc::TwitchIRCClient;
 use twitch_irc::{ClientConfig, SecureTCPTransport};
 
-use std::env;
 
 #[tokio::main]
 pub async fn main() {
@@ -21,33 +20,42 @@ pub async fn main() {
     let config =
         ClientConfig::new_simple(StaticLoginCredentials::new(login_name, Some(oauth_token)));
 
+    // xd
+    let pajlada = "pajlada";
+    let pajbot = "pajbot";
+    let pajbot_id = "82008718";
+    let alert_message = "pajaS 🚨 ALERT";
+
     let (mut incoming_messages, client) =
         TwitchIRCClient::<SecureTCPTransport, StaticLoginCredentials>::new(config);
+
+    client.join("pajlada".to_owned()).unwrap();
+    client.join("nourylul".to_owned()).unwrap();
 
     let join_handle = tokio::spawn(async move {
         while let Some(message) = incoming_messages.recv().await {
             match message {
                 ServerMessage::Privmsg(msg) => {
-                    println!(
-                        "(#{}) {}: {}",
-                        msg.channel_login, msg.sender.name, msg.message_text
-                    );
+                    if msg.channel_login == pajlada
+                        && msg.sender.login == pajbot
+                        && msg.sender.id == pajbot_id
+                        && msg.message_text == alert_message
+                        && msg.is_action
+                    {
+                        client
+                            .say("nourylul".to_owned(), "xd".to_owned())
+                            .await
+                            .unwrap();
+                    };
                 }
                 ServerMessage::Whisper(msg) => {
-                    println!("(w) {}: {}", msg.sender.name, msg.message_text);
+                    println!("[whisper] {}: {}", msg.sender.name, msg.message_text);
                 }
                 _ => {}
             }
         }
     });
 
-    client.join("pajlada".to_owned()).unwrap();
-    client.join("nourylul".to_owned()).unwrap();
-
-    client
-        .say("nourylul".to_owned(), "test xd".to_owned())
-        .await
-        .unwrap();
 
     join_handle.await.unwrap();
 

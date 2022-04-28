@@ -7,18 +7,43 @@ pub async fn handle_message(
     msg: PrivmsgMessage,
     client: TwitchIRCClient<SecureTCPTransport, StaticLoginCredentials>,
 ) {
-    let cmd_params: Vec<&str> = msg.message_text.split(" ").collect();
-    let command = cmd_params[0];
+    // msg_params is a Vec<&str> of words from a
+    // twitch_irc::message::PrivmsgMessage
+    let msg_params: Vec<&str> = msg.message_text.split(" ").collect();
 
-    //
-    println!("{:?}", command);
+    // command contains the "trigger word" for a command
+    // including the prefix: e.g: ()ping
+    let command: &str = msg_params[0];
 
-    if command == "()ping" {
-        client
-            .say(msg.channel_login.to_owned(), "Pong!".to_owned())
-            .await
-            .unwrap();
-    };
+    // command_stripped contains the "trigger word" for a command
+    // without the prefix: e.g: ping
+    let command_stripped = command.strip_prefix("()");
+    // let v: Vec<&str> = command.split(2, '').collect();
+
+    println!("[command] {:?}", command);
+    println!("[command_stripped] {:?}", command_stripped);
+
+    match command_stripped {
+        Some("ping") => {
+            client
+                .say(msg.channel_login.to_owned(), "Pong!".to_owned())
+                .await
+                .unwrap();
+        }
+        Some("xd") => {
+            client
+                .say(msg.channel_login.to_owned(), "xd".to_owned())
+                .await
+                .unwrap();
+        }
+        _ => {}
+    }
+    //  if command_stripped == Some("ping") {
+    //      client
+    //          .say(msg.channel_login.to_owned(), "Pong!".to_owned())
+    //          .await
+    //          .unwrap();
+    //  };
     // for s in split {
     //     println!("{}", s);
     //     // let command = s.chars().nth(0);

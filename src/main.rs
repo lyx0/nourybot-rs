@@ -21,8 +21,9 @@ pub async fn main() {
     let (mut incoming_messages, client) =
         TwitchIRCClient::<SecureTCPTransport, StaticLoginCredentials>::new(config);
 
-    client.join("pajlada".to_owned()).unwrap();
+    // client.join("pajlada".to_owned()).unwrap();
     client.join("nourylul".to_owned()).unwrap();
+    client.join("nourybot".to_owned()).unwrap();
     client
         .say("nourylul".to_owned(), "RaccAttack TeaTime".to_owned())
         .await
@@ -36,7 +37,7 @@ pub async fn main() {
         while let Some(message) = incoming_messages.recv().await {
             match message {
                 ServerMessage::Privmsg(msg) => {
-                    handlers::message::handle_message(msg);
+                    handlers::message::handle_message(msg, client.clone()).await;
                     // if msg.channel_login == pajlada
                     //     && msg.sender.login == pajbot
                     //     && msg.sender.id == pajbot_id

@@ -11,7 +11,7 @@ use twitch_irc::{ClientConfig, SecureTCPTransport};
 
 #[tokio::main]
 pub async fn main() {
-    let cfg = config::new_config();
+    let cfg = config::Config::new();
     let config =
         ClientConfig::new_simple(StaticLoginCredentials::new(cfg.username, Some(cfg.oauth)));
 

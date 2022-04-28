@@ -1,8 +1,4 @@
-extern crate dotenv;
 mod config;
-
-#[macro_use]
-extern crate dotenv_codegen;
 
 use twitch_irc::login::StaticLoginCredentials;
 use twitch_irc::message::ServerMessage;
@@ -11,7 +7,7 @@ use twitch_irc::{ClientConfig, SecureTCPTransport};
 
 #[tokio::main]
 pub async fn main() {
-    let cfg = config::Config::new();
+    let cfg = config::load::Config::new();
     let config =
         ClientConfig::new_simple(StaticLoginCredentials::new(cfg.username, Some(cfg.oauth)));
 
@@ -60,7 +56,4 @@ pub async fn main() {
     });
 
     join_handle.await.unwrap();
-
-    println!("{}", dotenv!("TWITCH_USERNAME"));
-    println!("{}", dotenv!("TWITCH_OAUTH"));
 }

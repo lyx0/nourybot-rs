@@ -1,9 +1,8 @@
 extern crate dotenv;
+mod config;
 
 #[macro_use]
 extern crate dotenv_codegen;
-
-use dotenv::dotenv;
 
 use twitch_irc::login::StaticLoginCredentials;
 use twitch_irc::message::ServerMessage;
@@ -12,12 +11,9 @@ use twitch_irc::{ClientConfig, SecureTCPTransport};
 
 #[tokio::main]
 pub async fn main() {
-    dotenv().ok();
-
-    let login_name = dotenv!("TWITCH_USERNAME").to_owned();
-    let oauth_token = dotenv!("TWITCH_OAUTH").to_owned();
+    let cfg = config::new_config();
     let config =
-        ClientConfig::new_simple(StaticLoginCredentials::new(login_name, Some(oauth_token)));
+        ClientConfig::new_simple(StaticLoginCredentials::new(cfg.username, Some(cfg.oauth)));
 
     // xd
     let pajlada = "pajlada";
@@ -50,7 +46,7 @@ pub async fn main() {
                         && msg.is_action
                     {
                         client
-                            .say("pajlada".to_owned(), "gopherGermany OBACHT".to_owned())
+                            .say("pajlada".to_owned(), "🦀 🚨 ALARM IS GONE".to_owned())
                             .await
                             .unwrap();
                     };

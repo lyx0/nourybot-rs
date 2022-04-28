@@ -1,4 +1,5 @@
 mod config;
+mod handlers;
 
 use twitch_irc::login::StaticLoginCredentials;
 use twitch_irc::message::ServerMessage;
@@ -12,10 +13,10 @@ pub async fn main() {
         ClientConfig::new_simple(StaticLoginCredentials::new(cfg.username, Some(cfg.oauth)));
 
     // xd
-    let pajlada = "pajlada";
-    let pajbot = "pajbot";
-    let pajbot_id = "82008718";
-    let alert_message = "pajaS 🚨 ALERT";
+    // let pajlada = "pajlada";
+    // let pajbot = "pajbot";
+    // let pajbot_id = "82008718";
+    // let alert_message = "pajaS 🚨 ALERT";
 
     let (mut incoming_messages, client) =
         TwitchIRCClient::<SecureTCPTransport, StaticLoginCredentials>::new(config);
@@ -35,17 +36,18 @@ pub async fn main() {
         while let Some(message) = incoming_messages.recv().await {
             match message {
                 ServerMessage::Privmsg(msg) => {
-                    if msg.channel_login == pajlada
-                        && msg.sender.login == pajbot
-                        && msg.sender.id == pajbot_id
-                        && msg.message_text == alert_message
-                        && msg.is_action
-                    {
-                        client
-                            .say("pajlada".to_owned(), "🦀 🚨 ALARM IS GONE".to_owned())
-                            .await
-                            .unwrap();
-                    };
+                    handlers::message::handle_message(msg);
+                    // if msg.channel_login == pajlada
+                    //     && msg.sender.login == pajbot
+                    //     && msg.sender.id == pajbot_id
+                    //     && msg.message_text == alert_message
+                    //     && msg.is_action
+                    // {
+                    //     client
+                    //         .say("pajlada".to_owned(), "🦀 🚨 ALARM IS GONE".to_owned())
+                    //         .await
+                    //         .unwrap();
+                    // };
                 }
                 ServerMessage::Whisper(msg) => {
                     println!("[whisper] {}: {}", msg.sender.name, msg.message_text);

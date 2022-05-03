@@ -20,9 +20,14 @@ pub async fn handle_message(
     let command_stripped = command.strip_prefix("()");
     // let v: Vec<&str> = command.split(2, '').collect();
 
-    println!("[command] {:?}", command);
-    println!("[command_stripped] {:?}", command_stripped);
+    // println!("[command] {:?}", command);
+    // println!("[command_stripped] {:?}", command_stripped);
 
+    // Log the messages
+    println!(
+        "PRIVMSG #{} {} :{}",
+        msg.channel_login, msg.sender.login, msg.message_text
+    );
     match command_stripped {
         Some("ping") => {
             client

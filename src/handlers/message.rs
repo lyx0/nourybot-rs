@@ -17,7 +17,7 @@ pub async fn handle_message(
 
     // command_stripped contains the "trigger word" for a command
     // without the prefix: e.g: ping
-    let command_stripped = command.strip_prefix("()");
+    let command_stripped = command.strip_prefix("()").unwrap();
     // let v: Vec<&str> = command.split(2, '').collect();
 
     // println!("[command] {:?}", command);
@@ -29,13 +29,13 @@ pub async fn handle_message(
         msg.channel_login, msg.sender.login, msg.message_text
     );
     match command_stripped {
-        Some("ping") => {
+        "ping" => {
             client
                 .say(msg.channel_login.to_owned(), "Pong!".to_owned())
                 .await
                 .unwrap();
         }
-        Some("xd") => {
+        "xd" => {
             client
                 .say(msg.channel_login.to_owned(), "xd".to_owned())
                 .await

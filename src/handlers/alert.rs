@@ -29,7 +29,7 @@ pub async fn handle_alert(
         client
             .privmsg(
                 pajlada.to_owned(),
-                "/me PAJAW 🚨 seems like a good alert, it has my support.".to_owned(),
+                "/me PAJAW 🚨 Seems like a good alert, it has my support.".to_owned(),
             )
             .await
             .unwrap();
